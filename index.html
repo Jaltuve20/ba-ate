@@ -222,4 +222,207 @@
                 Invitación Exclusiva
             </p>
 
-            <!-- Pregunta 
+            <!-- Pregunta principal con tipografía limpia, gruesa y muy legible -->
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight leading-snug mb-6">
+                ¿Te quieres bañar conmigo?
+            </h1>
+
+            <!-- Separador con corazón -->
+            <div class="flex items-center justify-center gap-3 my-5">
+                <div class="h-px w-16 bg-gradient-to-r from-transparent to-rose-300"></div>
+                <span class="text-rose-500 text-sm">❤️</span>
+                <div class="h-px w-16 bg-gradient-to-l from-transparent to-rose-300"></div>
+            </div>
+
+            <!-- Detalles: Fecha y Hora con alto contraste -->
+            <div class="bg-rose-50 rounded-2xl p-4 sm:p-5 border border-rose-200 space-y-3 text-left shadow-sm mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-white flex items-center justify-center text-rose-600 shadow-sm border border-rose-100 text-lg">
+                        📅
+                    </div>
+                    <div>
+                        <span class="block text-xs font-bold uppercase tracking-wider text-rose-600">Fecha</span>
+                        <span class="text-base sm:text-lg font-bold text-gray-950">Hoy</span>
+                    </div>
+                </div>
+
+                <div class="h-px w-full bg-rose-200/70"></div>
+
+                <div class="flex items-center gap-3">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-white flex items-center justify-center text-rose-600 shadow-sm border border-rose-100 text-lg">
+                        ⏰
+                    </div>
+                    <div>
+                        <span class="block text-xs font-bold uppercase tracking-wider text-rose-600">Hora</span>
+                        <span class="text-base sm:text-lg font-bold text-gray-950">A la que llegues del trabajo</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones interactivos de respuesta -->
+            <div id="response-area" class="mb-6 relative">
+                <div id="buttons-wrapper" class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <button 
+                        id="accept-btn"
+                        type="button"
+                        class="w-full sm:w-auto flex-1 py-3.5 px-6 rounded-2xl bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold text-base shadow-md hover:shadow-lg transform active:scale-95 transition-all duration-200 cursor-pointer"
+                    >
+                        ¡Sí, obvio! 💖
+                    </button>
+                    <button 
+                        id="no-btn"
+                        type="button"
+                        class="w-full sm:w-auto py-3.5 px-5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold text-sm border border-gray-300 shadow-sm cursor-pointer select-none"
+                    >
+                        No 🙈
+                    </button>
+                </div>
+                <p id="accepted-msg" class="hidden text-rose-700 font-bold text-sm sm:text-base bg-rose-100 py-3 px-4 rounded-xl border border-rose-300 shadow-sm">
+                    ¡Sabía que dirías que sí! Te espero con el agua calientita 🥰✨
+                </p>
+            </div>
+
+            <!-- Términos y condiciones en negro puro (#000000) y perfectamente legibles -->
+            <footer class="pt-3 border-t border-rose-200">
+                <p class="text-xs leading-relaxed text-[#000000] font-semibold">
+                    Términos y condiciones: no te podré ir a buscar abajo.
+                </p>
+            </footer>
+
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ambientContainer = document.getElementById('ambient-hearts');
+            const openBtn = document.getElementById('open-btn');
+            const buttonStage = document.getElementById('button-stage');
+            const invitationStage = document.getElementById('invitation-stage');
+            const buttonsWrapper = document.getElementById('buttons-wrapper');
+            const acceptBtn = document.getElementById('accept-btn');
+            const noBtn = document.getElementById('no-btn');
+            const acceptedMsg = document.getElementById('accepted-msg');
+
+            const heartEmojis = ['❤️', '💖', '💕', '💗', '💓', '🩷', '💘', '💝'];
+
+            // 1. Generar corazones flotantes continuos en el fondo
+            function createAmbientHeart() {
+                const heart = document.createElement('div');
+                heart.classList.add('floating-heart');
+                heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                
+                const startLeft = Math.random() * 100;
+                const duration = 6 + Math.random() * 7; // Entre 6s y 13s
+                const size = 14 + Math.random() * 18;   // Entre 14px y 32px
+                
+                heart.style.left = `${startLeft}vw`;
+                heart.style.fontSize = `${size}px`;
+                heart.style.animationDuration = `${duration}s`;
+                
+                ambientContainer.appendChild(heart);
+
+                // Limpiar nodo al terminar su animación
+                setTimeout(() => {
+                    heart.remove();
+                }, duration * 1000);
+            }
+
+            // Crear algunos corazones iniciales inmediatamente
+            for (let i = 0; i < 12; i++) {
+                setTimeout(createAmbientHeart, i * 350);
+            }
+            // Seguir creando corazones constantemente
+            setInterval(createAmbientHeart, 650);
+
+            // 2. Función para explosión de corazones al hacer clic
+            function triggerHeartBurst(originX, originY, count = 28) {
+                for (let i = 0; i < count; i++) {
+                    const burst = document.createElement('div');
+                    burst.classList.add('burst-heart');
+                    burst.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                    
+                    // Ángulo y distancia aleatoria
+                    const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+                    const distance = 90 + Math.random() * 180;
+                    const tx = Math.cos(angle) * distance;
+                    const ty = Math.sin(angle) * distance - 40; // Ligero impulso hacia arriba
+                    const rot = (Math.random() - 0.5) * 360;
+                    const size = 18 + Math.random() * 18;
+
+                    burst.style.left = `${originX}px`;
+                    burst.style.top = `${originY}px`;
+                    burst.style.fontSize = `${size}px`;
+                    burst.style.setProperty('--tx', `${tx}px`);
+                    burst.style.setProperty('--ty', `${ty}px`);
+                    burst.style.setProperty('--rot', `${rot}deg`);
+
+                    document.body.appendChild(burst);
+
+                    setTimeout(() => {
+                        burst.remove();
+                    }, 1450);
+                }
+            }
+
+            // 3. Evento al hacer clic en "Abrir invitación"
+            openBtn.addEventListener('click', (e) => {
+                const rect = openBtn.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+
+                // Explosión de corazones desde el botón
+                triggerHeartBurst(centerX, centerY, 32);
+
+                // Ocultar el botón suavemente
+                buttonStage.style.opacity = '0';
+                buttonStage.style.transform = 'scale(0.8)';
+                buttonStage.style.pointerEvents = 'none';
+
+                // Mostrar la tarjeta de invitación
+                setTimeout(() => {
+                    buttonStage.classList.add('hidden');
+                    invitationStage.classList.remove('card-hidden');
+                    invitationStage.classList.add('card-visible');
+                }, 260);
+            });
+
+            // 4. Evento al confirmar en la tarjeta
+            acceptBtn.addEventListener('click', (e) => {
+                const rect = acceptBtn.getBoundingClientRect();
+                triggerHeartBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 30);
+                
+                buttonsWrapper.classList.add('hidden');
+                acceptedMsg.classList.remove('hidden');
+            });
+
+            // 5. Lógica divertida para el botón "No" que se escapa al intentar presionarlo
+            const funnyPhrases = [
+                '¿Segura? 🤔',
+                '¡Error 404! 😜',
+                'Intenta el otro 👉',
+                '¡Nop! 🙈',
+                'No disponible 🚫',
+                '¡Dale al sí! 💕'
+            ];
+            let escapeCount = 0;
+
+            function moveNoButton(e) {
+                if (e) e.preventDefault();
+                escapeCount++;
+                
+                // Cambiar texto de forma graciosa
+                noBtn.textContent = funnyPhrases[escapeCount % funnyPhrases.length];
+                
+                // Calcular un desplazamiento aleatorio dentro de un rango seguro en la tarjeta
+                const randomX = (Math.random() - 0.5) * 140;
+                const randomY = (Math.random() - 0.5) * 90;
+                noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+            }
+
+            noBtn.addEventListener('mouseenter', moveNoButton);
+            noBtn.addEventListener('touchstart', moveNoButton, { passive: false });
+            noBtn.addEventListener('click', moveNoButton);
+        });
+    </script>
+</body>
+</html>
